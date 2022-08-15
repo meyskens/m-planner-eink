@@ -18,14 +18,7 @@
 
 #include "StringSplitter.h"
 
-// setup wifi
-#define ssid F("Maartje IoT")
-#define password F("xxx")
-
-#define apiToken F("xxx")
-
-#define weatherApiKey F("xxx")
-#define weatherCity F("lat=0.0&lon=0.0")
+#include "secrets.h"
 
 const int FRAME_WIDTH = 640;
 const int FRAME_HEIGHT = 384;
