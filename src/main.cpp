@@ -53,7 +53,7 @@ String getTasks()
   String tasks = "";
   for (int i = 0; i < obj.size(); i++)
   {
-    tasks += "* " + obj[i]["time"].as<String>() + " - " + obj[i]["name"].as<String>() + "\n";
+    tasks += "* " + obj[i]["time"].as<String>() + "-" + obj[i]["name"].as<String>() + "\n";
   }
 
   http.end(); 
@@ -89,7 +89,7 @@ String getCalendar()
     tasks += "* " + obj[i]["start"].as<String>() + " - " + obj[i]["name"].as<String>();
     if (obj[i]["location"].as<String>() != "")
     {
-      tasks += " - " + obj[i]["location"].as<String>();
+      tasks += "-" + obj[i]["location"].as<String>();
     }
     tasks += "\n";
   }
@@ -256,7 +256,7 @@ void renderDisplay()
 
     for(int i = 0; i < taskCount; i++){
       display.setCursor(LEFT_MARGIN + 17, TOP_MARGIN + 46 + i * 14);
-      display.println(taskSplitter->getItemAtIndex(i));
+      display.println(taskSplitter->getItemAtIndex(i).substring(0, 30));
     }
 
     if (taskCount <2 && taskSplitter->getItemAtIndex(0) == "" )
@@ -276,7 +276,7 @@ void renderDisplay()
 
     for(int i = 0; i < calendarCount; i++){
       display.setCursor(LEFT_MARGIN + 17, TOP_MARGIN + 220 + i * 14);
-      display.println(calendarSplitter->getItemAtIndex(i));
+      display.println(calendarSplitter->getItemAtIndex(i).substring(0, 30));
     }
 
     Serial.println(calendarCount);
@@ -299,7 +299,7 @@ void renderDisplay()
 
     for(int i = 0; i < ideaCount; i++){
       display.setCursor(LEFT_MARGIN + 290, TOP_MARGIN + 175 + i * 14);
-      display.print(ideaSplitter->getItemAtIndex(i));
+      display.print(ideaSplitter->getItemAtIndex(i).substring(0, 29));
     }
 
     if (ideaCount == 0)
