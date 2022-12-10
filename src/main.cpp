@@ -133,7 +133,7 @@ String getIdeas()
   return tasks;
 }
 
-void getWeather(byte *tmpNow, byte *minToday, byte *maxToday, byte *rainToday, byte *minTomorrow, byte *maxTomorrow,byte *rainTomorrow, char *iconToday, char *iconTomorrow)
+void getWeather(int8 *tmpNow, int8 *minToday, int8 *maxToday, byte *rainToday, int8 *minTomorrow, int8 *maxTomorrow,byte *rainTomorrow, char *iconToday, char *iconTomorrow)
 {
 
   WiFiClient client;
@@ -166,15 +166,14 @@ void getWeather(byte *tmpNow, byte *minToday, byte *maxToday, byte *rainToday, b
   deserializeJson(doc, http.getStream(), DeserializationOption::Filter(filter));
   JsonObject obj = doc.as<JsonObject>();
 
-  // +0.5 is a rounding hack, clever heh?
-  *tmpNow = (byte)obj["current"]["temp"].as<float>()+0.5;
-  *minToday = (byte)obj["daily"][0]["temp"]["min"].as<float>()+0.5;
-  *maxToday = (byte)obj["daily"][0]["temp"]["max"].as<float>()+0.5;
+  *tmpNow = (int8)round(obj["current"]["temp"].as<float>());
+  *minToday = (int8)round(obj["daily"][0]["temp"]["min"].as<float>());
+  *maxToday = (int8)round(obj["daily"][0]["temp"]["max"].as<float>());
   *rainToday = (byte)(obj["daily"][0]["pop"].as<float>()*100);
   *iconToday = convertOpenWeatherToMeteocons(obj["daily"][0]["weather"][0]["icon"].as<String>());
   
-  *minTomorrow = (byte)obj["daily"][1]["temp"]["min"].as<float>()+0.5;
-  *maxTomorrow = (byte)obj["daily"][1]["temp"]["max"].as<float>()+0.5;
+  *minTomorrow = (int8)round(obj["daily"][1]["temp"]["min"].as<float>());
+  *maxTomorrow = (int8)round(obj["daily"][1]["temp"]["max"].as<float>());
   *rainTomorrow = (byte)(obj["daily"][1]["pop"].as<float>()*100);
   *iconTomorrow = convertOpenWeatherToMeteocons(obj["daily"][1]["weather"][0]["icon"].as<String>());
   
@@ -203,7 +202,8 @@ int getHours()
 void renderDisplay()
 {
 
-  byte tmpNow, minToday, maxToday, rainToday, minTomorrow, maxTomorrow, rainTomorrow;
+  int8 tmpNow, minToday, maxToday, minTomorrow, maxTomorrow;
+  byte rainToday, rainTomorrow;
   char iconToday, iconTomorrow;
 
   StringSplitter *taskSplitter = new StringSplitter(getTasks(), '\n', 10); 
@@ -320,9 +320,9 @@ void renderDisplay()
     display.setTextSize(1);
     display.setCursor(345, TOP_MARGIN + 69);
     display.write("Min: ");
-    display.print((int)minToday); // Print minimum temperature
+    display.print(minToday); // Print minimum temperature
     display.write(" Max: ");
-    display.print((int)maxToday); // Print maximum temperature
+    display.print(maxToday); // Print maximum temperature
     display.write(" Rain: ");
     display.print((int)rainToday); // Print rain percentage
     display.write("%");
@@ -333,9 +333,9 @@ void renderDisplay()
     display.write(iconTomorrow);              // Print weather icon
     display.setFont(&FreeSans9pt7b);      // Change font
     display.write(" ");
-    display.print((int)minTomorrow); // Print minimum temperature
+    display.print(minTomorrow); // Print minimum temperature
     display.write(" - ");
-    display.print((int)maxTomorrow); // Print maximum temperature
+    display.print(maxTomorrow); // Print maximum temperature
     display.write(" Rain: ");
     display.print((int)rainTomorrow); // Print rain percentage
     display.write("%");
